@@ -123,32 +123,12 @@ export default function Home() {
         {/* 結果 */}
         {result && !loading && (
           <div className="space-y-6">
-            {/* プロフィール */}
-            <div className="flex items-center gap-4 bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
-              {result.avatar && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={result.avatar}
-                  alt={result.displayName}
-                  className="w-14 h-14 rounded-full"
-                />
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="font-bold text-lg truncate">{result.displayName}</p>
-                <p className="text-zinc-400 text-sm">@{result.username}</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold">{formatNum(result.followers ?? 0)}</p>
-                <p className="text-zinc-400 text-xs">フォロワー</p>
-              </div>
-            </div>
-
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-lg">
-                バズ投稿 TOP {result.top10.length}
+                @{result.username} のバズ投稿 TOP {result.top10.length}
               </h2>
               <p className="text-zinc-500 text-sm">
-                {result.total}件中から選出
+                直近{result.total}件から選出
               </p>
             </div>
 
