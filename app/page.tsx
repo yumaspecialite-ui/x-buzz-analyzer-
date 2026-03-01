@@ -76,7 +76,7 @@ export default function Home() {
           <span className="text-2xl font-bold">𝕏</span>
           <div>
             <h1 className="text-xl font-bold">KくんXバズアナライザー</h1>
-            <p className="text-zinc-400 text-sm">競合アカウントの直近100件からバズった投稿TOP10を解析</p>
+            <p className="text-zinc-400 text-sm">競合アカウントの話題の投稿TOP10を解析</p>
             <p className="text-zinc-600 text-xs">開発者=Kくん※2次利用禁止</p>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function Home() {
         {loading && (
           <div className="flex flex-col items-center py-16 gap-4">
             <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-zinc-400 text-sm">ツイートを取得中（最大100件）...</p>
+            <p className="text-zinc-400 text-sm">投稿を取得中...</p>
           </div>
         )}
 
@@ -128,7 +128,7 @@ export default function Home() {
                 @{result.username} のバズ投稿 TOP {result.top10.length}
               </h2>
               <p className="text-zinc-500 text-sm">
-                直近{result.total}件から選出
+                話題の投稿から選出
               </p>
             </div>
 
