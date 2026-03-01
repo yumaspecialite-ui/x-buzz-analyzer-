@@ -75,7 +75,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 py-6 flex items-center gap-3">
           <span className="text-2xl font-bold">𝕏</span>
           <div>
-            <h1 className="text-xl font-bold">バズ投稿アナライザー</h1>
+            <h1 className="text-xl font-bold">KくんXバズアナライザー</h1>
             <p className="text-zinc-400 text-sm">競合アカウントのバズった投稿TOP10を解析</p>
           </div>
         </div>
