@@ -125,7 +125,7 @@ export default function Home() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-lg">
-                @{result.username} のバズ投稿 TOP {result.top10.length}
+                @{result.username} の話題の投稿 TOP {result.top10.length}
               </h2>
               <p className="text-zinc-500 text-sm">
                 話題の投稿から選出
