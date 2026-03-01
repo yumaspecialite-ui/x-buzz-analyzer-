@@ -67,7 +67,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // 日付の新しい順に並べて上位100件だけに絞ってからスコア順
     const top10 = tweets
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 100)
       .sort((a, b) => b.score - a.score)
       .slice(0, 10);
 
