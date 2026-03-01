@@ -26,15 +26,6 @@ export async function POST(req: NextRequest) {
     const username = extractUsername(url);
     const scraper = new Scraper();
 
-    // ユーザー情報取得
-    const profile = await scraper.getProfile(username);
-    if (!profile) {
-      return NextResponse.json(
-        { error: `@${username} が見つかりません` },
-        { status: 404 }
-      );
-    }
-
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
@@ -51,11 +42,17 @@ export async function POST(req: NextRequest) {
       createdAt: string;
     }> = [];
 
-    // 元々動いていた100件取得に戻し、3ヶ月フィルターだけ追加
+    let displayName = username;
+    let avatar = "";
+    let followers = 0;
+
     const generator = scraper.getTweets(username, 100);
     for await (const tweet of generator) {
       if (!tweet.id) continue;
       if (tweet.timeParsed && tweet.timeParsed < threeMonthsAgo) continue;
+
+      // ツイートからプロフィール情報も取れるので一緒に取得
+      if (tweet.name) displayName = tweet.name;
 
       const likes = tweet.likes ?? 0;
       const retweets = tweet.retweets ?? 0;
@@ -84,9 +81,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       username,
-      displayName: profile.name,
-      avatar: profile.avatar,
-      followers: profile.followersCount,
+      displayName,
+      avatar,
+      followers,
       total: tweets.length,
       top10,
     });
