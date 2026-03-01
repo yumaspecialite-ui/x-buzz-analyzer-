@@ -26,8 +26,14 @@ export async function POST(req: NextRequest) {
 
     const username = extractUsername(url);
 
-    // Scraper はゲストトークンを自動管理する
     const scraper = new Scraper();
+
+    // 環境変数にX認証情報があればログイン（ゲスト制限を回避）
+    const twitterUser = process.env.TWITTER_USERNAME;
+    const twitterPass = process.env.TWITTER_PASSWORD;
+    if (twitterUser && twitterPass) {
+      await scraper.login(twitterUser, twitterPass);
+    }
 
     // ユーザー情報取得
     const profile = await scraper.getProfile(username);
@@ -55,8 +61,8 @@ export async function POST(req: NextRequest) {
       createdAt: string;
     }> = [];
 
-    // 最大3200件取得しながら3ヶ月より古くなったら停止
-    const generator = scraper.getTweets(username, 3200);
+    // 最大500件取得しながら3ヶ月より古くなったら停止
+    const generator = scraper.getTweets(username, 500);
     for await (const tweet of generator) {
       if (!tweet.id) continue;
 
