@@ -61,13 +61,13 @@ export async function POST(req: NextRequest) {
       createdAt: string;
     }> = [];
 
-    // 最大500件取得しながら3ヶ月より古くなったら停止
-    const generator = scraper.getTweets(username, 500);
+    // 最大200件取得して3ヶ月以内の投稿だけに絞り込む
+    const generator = scraper.getTweets(username, 200);
     for await (const tweet of generator) {
       if (!tweet.id) continue;
 
-      // 3ヶ月より古い投稿が来たら打ち切り（新しい順に返ってくるため）
-      if (tweet.timeParsed && tweet.timeParsed < threeMonthsAgo) break;
+      // 3ヶ月より古い投稿はスキップ（日付不明は含める）
+      if (tweet.timeParsed && tweet.timeParsed < threeMonthsAgo) continue;
 
       const likes = tweet.likes ?? 0;
       const retweets = tweet.retweets ?? 0;
