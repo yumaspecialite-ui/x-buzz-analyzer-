@@ -73,7 +73,8 @@ export default function Home() {
       {/* ヘッダー */}
       <div className="border-b border-zinc-800">
         <div className="max-w-3xl mx-auto px-4 py-6 flex items-center gap-3">
-          <span className="text-2xl font-bold">𝕏</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="https://pbs.twimg.com/profile_images/1902427070703267840/nf-lE3WD.jpg" alt="Kくん" className="w-10 h-10 rounded-full" />
           <div>
             <h1 className="text-xl font-bold">KくんXバズアナライザー</h1>
             <p className="text-zinc-400 text-sm">競合アカウントの話題の投稿TOP10を解析</p>
