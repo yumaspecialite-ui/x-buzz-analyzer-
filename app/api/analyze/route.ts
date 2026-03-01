@@ -38,7 +38,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 最新ツイートを最大100件取得
+    // 直近3ヶ月の投稿を取得
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
     const tweets: Array<{
       id: string;
       text: string;
@@ -52,9 +55,14 @@ export async function POST(req: NextRequest) {
       createdAt: string;
     }> = [];
 
-    const generator = scraper.getTweets(username, 100);
+    // 最大3200件取得しながら3ヶ月より古くなったら停止
+    const generator = scraper.getTweets(username, 3200);
     for await (const tweet of generator) {
       if (!tweet.id) continue;
+
+      // 3ヶ月より古い投稿が来たら打ち切り（新しい順に返ってくるため）
+      if (tweet.timeParsed && tweet.timeParsed < threeMonthsAgo) break;
+
       const likes = tweet.likes ?? 0;
       const retweets = tweet.retweets ?? 0;
       const replies = tweet.replies ?? 0;
