@@ -26,9 +26,6 @@ export async function POST(req: NextRequest) {
     const username = extractUsername(url);
     const scraper = new Scraper();
 
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-
     const tweets: Array<{
       id: string;
       text: string;
@@ -43,15 +40,10 @@ export async function POST(req: NextRequest) {
     }> = [];
 
     let displayName = username;
-    let avatar = "";
-    let followers = 0;
 
     const generator = scraper.getTweets(username, 100);
     for await (const tweet of generator) {
       if (!tweet.id) continue;
-      if (tweet.timeParsed && tweet.timeParsed < threeMonthsAgo) continue;
-
-      // ツイートからプロフィール情報も取れるので一緒に取得
       if (tweet.name) displayName = tweet.name;
 
       const likes = tweet.likes ?? 0;
@@ -82,8 +74,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       username,
       displayName,
-      avatar,
-      followers,
+      avatar: "",
+      followers: 0,
       total: tweets.length,
       top10,
     });

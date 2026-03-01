@@ -76,7 +76,7 @@ export default function Home() {
           <span className="text-2xl font-bold">𝕏</span>
           <div>
             <h1 className="text-xl font-bold">KくんXバズアナライザー</h1>
-            <p className="text-zinc-400 text-sm">競合アカウントのバズった投稿TOP10を解析</p>
+            <p className="text-zinc-400 text-sm">競合アカウントの直近100件からバズった投稿TOP10を解析</p>
             <p className="text-zinc-600 text-xs">開発者=Kくん※2次利用禁止</p>
           </div>
         </div>
