@@ -5,7 +5,6 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 function extractUsername(input: string): string {
-  // https://x.com/username or https://twitter.com/username or just @username or username
   const patterns = [
     /(?:https?:\/\/)?(?:www\.)?(?:x\.com|twitter\.com)\/([A-Za-z0-9_]+)/,
     /^@?([A-Za-z0-9_]+)$/,
@@ -25,15 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     const username = extractUsername(url);
-
     const scraper = new Scraper();
-
-    // 環境変数にX認証情報があればログイン（ゲスト制限を回避）
-    const twitterUser = process.env.TWITTER_USERNAME;
-    const twitterPass = process.env.TWITTER_PASSWORD;
-    if (twitterUser && twitterPass) {
-      await scraper.login(twitterUser, twitterPass);
-    }
 
     // ユーザー情報取得
     const profile = await scraper.getProfile(username);
@@ -44,7 +35,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 直近3ヶ月の投稿を取得
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
@@ -61,12 +51,10 @@ export async function POST(req: NextRequest) {
       createdAt: string;
     }> = [];
 
-    // 最大200件取得して3ヶ月以内の投稿だけに絞り込む
-    const generator = scraper.getTweets(username, 200);
+    // 元々動いていた100件取得に戻し、3ヶ月フィルターだけ追加
+    const generator = scraper.getTweets(username, 100);
     for await (const tweet of generator) {
       if (!tweet.id) continue;
-
-      // 3ヶ月より古い投稿はスキップ（日付不明は含める）
       if (tweet.timeParsed && tweet.timeParsed < threeMonthsAgo) continue;
 
       const likes = tweet.likes ?? 0;
@@ -74,8 +62,6 @@ export async function POST(req: NextRequest) {
       const replies = tweet.replies ?? 0;
       const views = tweet.views ?? 0;
       const bookmarks = tweet.bookmarkCount ?? 0;
-
-      // スコア: ビュー数があればビュー数優先、なければエンゲージメント
       const score = views > 0 ? views : (likes * 2 + retweets * 3 + replies + bookmarks);
 
       tweets.push({
@@ -92,7 +78,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // スコア降順でTOP10
     const top10 = tweets
       .sort((a, b) => b.score - a.score)
       .slice(0, 10);
